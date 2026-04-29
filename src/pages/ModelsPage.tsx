@@ -14,6 +14,7 @@ type Item = {
 type Props = {
   category: Category;
   items: Item[];
+  totalCount: number;
   onBack: () => void;
   onOpenItem: (itemId: string) => void;
   onOpenLead: () => void;
@@ -22,6 +23,7 @@ type Props = {
 export default function ModelsPage({
   category,
   items,
+  totalCount,
   onBack,
   onOpenItem,
   onOpenLead,
@@ -36,24 +38,30 @@ export default function ModelsPage({
         <div>
           <h1 className="text-2xl font-bold text-slate-900">{category.name}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Найдено моделей: {items.length}
+            Найдено моделей: {items.length} из {totalCount}
           </p>
         </div>
 
         <div className="space-y-3">
-          {items.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onOpenItem(item.id)}
-              className="w-full rounded-2xl bg-white p-4 text-left shadow-sm"
-            >
-              <div className="font-semibold text-slate-900">{item.name}</div>
-              <div className="mt-1 text-sm text-slate-600">{item.priceFrom}</div>
-              <div className="mt-2 text-sm text-slate-500">
-                {item.specsList.slice(0, 2).join(" • ")}
-              </div>
-            </button>
-          ))}
+          {items.length > 0 ? (
+            items.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => onOpenItem(item.id)}
+                className="w-full rounded-2xl bg-white p-4 text-left shadow-sm"
+              >
+                <div className="font-semibold text-slate-900">{item.name}</div>
+                <div className="mt-1 text-sm text-slate-600">{item.priceFrom}</div>
+                <div className="mt-2 text-sm text-slate-500">
+                  {item.specsList.slice(0, 2).join(" • ")}
+                </div>
+              </button>
+            ))
+          ) : (
+            <div className="rounded-2xl bg-white p-5 text-sm text-slate-500 shadow-sm">
+              По выбранным фильтрам модели не найдены.
+            </div>
+          )}
         </div>
 
         <button

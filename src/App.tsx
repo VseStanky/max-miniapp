@@ -5,11 +5,13 @@ import CategoryFiltersPage from "./pages/CategoryFiltersPage";
 import ModelsPage from "./pages/ModelsPage";
 import ModelPage from "./pages/ModelPage";
 import LeadPage from "./pages/LeadPage";
+import FacetValuesPage from "./pages/FacetValuesPage";
 
 type Screen =
   | { name: "home" }
   | { name: "categories" }
   | { name: "filters"; categoryId: string }
+  | { name: "facet"; categoryId: string; facetKey: string }
   | { name: "models"; categoryId: string }
   | { name: "model"; categoryId: string; itemId: string }
   | { name: "lead"; categoryId?: string; itemId?: string };
@@ -31,6 +33,20 @@ type Item = {
   attrs: Record<string, string>;
   url?: string;
 };
+
+type FacetValue = {
+  value: string;
+  count: number;
+};
+
+type Facet = {
+  key: string;
+  name: string;
+  type: "checkbox" | "price";
+  values: FacetValue[];
+};
+
+type ActiveFilters = Record<string, Record<string, string>>;
 
 const categories: Category[] = [
   {
@@ -71,6 +87,7 @@ const items: Item[] = [
       "Тип станка": "Закрытый тип",
       "Рабочая зона (X, Y)": "1500x3000",
       "Мощность источника": "12 000",
+      Цена: "от 12 500 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -88,6 +105,7 @@ const items: Item[] = [
       "Тип станка": "Открытый тип",
       "Рабочая зона (X, Y)": "1500x3000",
       "Мощность источника": "3 000",
+      Цена: "от 4 900 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -105,6 +123,7 @@ const items: Item[] = [
       "Тип станка": "Закрытый тип",
       "Рабочая зона (X, Y)": "2000x4000",
       "Мощность источника": "6 000",
+      Цена: "от 8 700 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -117,6 +136,7 @@ const items: Item[] = [
     attrs: {
       "Усилие (т)": "100",
       "Длина гиба, мм": "3200",
+      Цена: "от 3 200 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -129,6 +149,7 @@ const items: Item[] = [
     attrs: {
       "Усилие (т)": "160",
       "Длина гиба, мм": "4000",
+      Цена: "от 5 400 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -141,6 +162,7 @@ const items: Item[] = [
     attrs: {
       "Диаметр обработки": "500",
       "Система ЧПУ": "Siemens",
+      Цена: "от 2 800 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
@@ -153,13 +175,99 @@ const items: Item[] = [
     attrs: {
       "Диаметр обработки": "630",
       "Система ЧПУ": "Fanuc",
+      Цена: "от 3 600 000 ₽",
     },
     url: "https://vsestanky.ru",
   },
 ];
 
+const facetsByCategory: Record<string, Facet[]> = {
+  laser: [
+    {
+      key: "Тип станка",
+      name: "Тип станка",
+      type: "checkbox",
+      values: [
+        { value: "Закрытый тип", count: 2 },
+        { value: "Открытый тип", count: 1 },
+      ],
+    },
+    {
+      key: "Рабочая зона (X, Y)",
+      name: "Рабочая зона (X, Y)",
+      type: "checkbox",
+      values: [
+        { value: "1500x3000", count: 2 },
+        { value: "2000x4000", count: 1 },
+      ],
+    },
+    {
+      key: "Мощность источника",
+      name: "Мощность источника",
+      type: "checkbox",
+      values: [
+        { value: "3 000", count: 1 },
+        { value: "6 000", count: 1 },
+        { value: "12 000", count: 1 },
+      ],
+    },
+  ],
+  press: [
+    {
+      key: "Усилие (т)",
+      name: "Усилие (т)",
+      type: "checkbox",
+      values: [
+        { value: "100", count: 1 },
+        { value: "160", count: 1 },
+      ],
+    },
+    {
+      key: "Длина гиба, мм",
+      name: "Длина гиба, мм",
+      type: "checkbox",
+      values: [
+        { value: "3200", count: 1 },
+        { value: "4000", count: 1 },
+      ],
+    },
+  ],
+  turning: [
+    {
+      key: "Диаметр обработки",
+      name: "Диаметр обработки",
+      type: "checkbox",
+      values: [
+        { value: "500", count: 1 },
+        { value: "630", count: 1 },
+      ],
+    },
+    {
+      key: "Система ЧПУ",
+      name: "Система ЧПУ",
+      type: "checkbox",
+      values: [
+        { value: "Siemens", count: 1 },
+        { value: "Fanuc", count: 1 },
+      ],
+    },
+  ],
+};
+
+function applyCategoryFilters(
+  itemsList: Item[],
+  activeFilters: Record<string, string>,
+): Item[] {
+  return itemsList.filter((item) => {
+    return Object.entries(activeFilters).every(([key, value]) => {
+      return item.attrs[key] === value;
+    });
+  });
+}
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
 
   const selectedCategory =
     "categoryId" in screen
@@ -171,10 +279,56 @@ export default function App() {
       ? items.find((i) => i.id === screen.itemId) ?? null
       : null;
 
-  const categoryItems = useMemo(() => {
+  const selectedFacets = selectedCategory
+    ? facetsByCategory[selectedCategory.id] ?? []
+    : [];
+
+  const currentCategoryFilters =
+    selectedCategory ? activeFilters[selectedCategory.id] ?? {} : {};
+
+  const rawCategoryItems = useMemo(() => {
     if (!selectedCategory) return [];
     return items.filter((item) => item.categoryId === selectedCategory.id);
   }, [selectedCategory]);
+
+  const filteredCategoryItems = useMemo(() => {
+    if (!selectedCategory) return [];
+    return applyCategoryFilters(rawCategoryItems, currentCategoryFilters);
+  }, [selectedCategory, rawCategoryItems, currentCategoryFilters]);
+
+  const selectedFacet =
+    screen.name === "facet" && selectedCategory
+      ? selectedFacets.find((facet) => facet.key === screen.facetKey) ?? null
+      : null;
+
+  const setFacetValue = (categoryId: string, facetKey: string, value: string) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [categoryId]: {
+        ...(prev[categoryId] ?? {}),
+        [facetKey]: value,
+      },
+    }));
+  };
+
+  const clearFacetValue = (categoryId: string, facetKey: string) => {
+    setActiveFilters((prev) => {
+      const nextCategoryFilters = { ...(prev[categoryId] ?? {}) };
+      delete nextCategoryFilters[facetKey];
+
+      return {
+        ...prev,
+        [categoryId]: nextCategoryFilters,
+      };
+    });
+  };
+
+  const clearAllFilters = (categoryId: string) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [categoryId]: {},
+    }));
+  };
 
   if (screen.name === "home") {
     return (
@@ -201,14 +355,39 @@ export default function App() {
     return (
       <CategoryFiltersPage
         category={selectedCategory}
-        itemsCount={categoryItems.length}
+        facets={selectedFacets}
+        activeFilters={currentCategoryFilters}
+        totalCount={rawCategoryItems.length}
+        filteredCount={filteredCategoryItems.length}
         onBack={() => setScreen({ name: "categories" })}
+        onOpenFacet={(facetKey) =>
+          setScreen({ name: "facet", categoryId: selectedCategory.id, facetKey })
+        }
         onOpenModels={() =>
           setScreen({ name: "models", categoryId: selectedCategory.id })
         }
         onOpenLead={() =>
           setScreen({ name: "lead", categoryId: selectedCategory.id })
         }
+        onResetAll={() => clearAllFilters(selectedCategory.id)}
+      />
+    );
+  }
+
+  if (screen.name === "facet" && selectedCategory && selectedFacet) {
+    return (
+      <FacetValuesPage
+        facet={selectedFacet}
+        activeValue={currentCategoryFilters[selectedFacet.key]}
+        onBack={() => setScreen({ name: "filters", categoryId: selectedCategory.id })}
+        onSelectValue={(value) => {
+          setFacetValue(selectedCategory.id, selectedFacet.key, value);
+          setScreen({ name: "filters", categoryId: selectedCategory.id });
+        }}
+        onClearValue={() => {
+          clearFacetValue(selectedCategory.id, selectedFacet.key);
+          setScreen({ name: "filters", categoryId: selectedCategory.id });
+        }}
       />
     );
   }
@@ -217,7 +396,8 @@ export default function App() {
     return (
       <ModelsPage
         category={selectedCategory}
-        items={categoryItems}
+        items={filteredCategoryItems}
+        totalCount={rawCategoryItems.length}
         onBack={() => setScreen({ name: "filters", categoryId: selectedCategory.id })}
         onOpenItem={(itemId) =>
           setScreen({ name: "model", categoryId: selectedCategory.id, itemId })
