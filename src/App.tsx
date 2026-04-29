@@ -6,6 +6,8 @@ import ModelsPage from "./pages/ModelsPage";
 import ModelPage from "./pages/ModelPage";
 import LeadPage from "./pages/LeadPage";
 import FacetValuesPage from "./pages/FacetValuesPage";
+import AboutPage from "./pages/AboutPage";
+import ContactsPage from "./pages/ContactsPage";
 import { categories, items } from "./data/catalog";
 import { facetsByCategory } from "./data/facets";
 import { applyCategoryFilters } from "./utils/catalog";
@@ -13,6 +15,8 @@ import type { ActiveFilters } from "./types/catalog";
 
 type Screen =
   | { name: "home" }
+  | { name: "about" }
+  | { name: "contacts" }
   | { name: "categories" }
   | { name: "filters"; categoryId: string }
   | { name: "facet"; categoryId: string; facetKey: string }
@@ -90,10 +94,18 @@ export default function App() {
       <HomePage
         onOpenCatalog={() => setScreen({ name: "categories" })}
         onOpenLead={() => setScreen({ name: "lead" })}
-        onOpenAbout={() => alert("Раздел 'О компании' сделаем следующим шагом")}
-        onOpenContacts={() => alert("Раздел 'Контакты' сделаем следующим шагом")}
+        onOpenAbout={() => setScreen({ name: "about" })}
+        onOpenContacts={() => setScreen({ name: "contacts" })}
       />
     );
+  }
+
+  if (screen.name === "about") {
+    return <AboutPage onBack={() => setScreen({ name: "home" })} />;
+  }
+
+  if (screen.name === "contacts") {
+    return <ContactsPage onBack={() => setScreen({ name: "home" })} />;
   }
 
   if (screen.name === "categories") {
