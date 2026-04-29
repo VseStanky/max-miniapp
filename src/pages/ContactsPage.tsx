@@ -31,17 +31,23 @@ export default function ContactsPage({ onBack }: Props) {
 
             <div>
               <div className="font-medium text-slate-900">E-mail</div>
-              <div>sales@vsestanky.ru</div>
+              <div>info@vsestanky.ru</div>
             </div>
 
             <div>
-              <div className="font-medium text-slate-900">Телефон</div>
-              <div>+7 (800) 000-00-00</div>
+              <div className="font-medium text-slate-900">Телефоны</div>
+              <div>Основной: +7 (903) 589-18-60</div>
+              <div>Дополнительный: +7 (499) 325-62-90</div>
+            </div>
+
+            <div>
+              <div className="font-medium text-slate-900">Адрес</div>
+              <div>г. Москва, 1-я Пугачевская, 25ст1</div>
             </div>
 
             <div>
               <div className="font-medium text-slate-900">Режим работы</div>
-              <div>Пн–Пт, 09:00–18:00</div>
+              <div>Пн–Пт, с 9:00 до 18:00</div>
             </div>
           </div>
         </div>
@@ -51,8 +57,8 @@ export default function ContactsPage({ onBack }: Props) {
             Быстрый способ связи
           </div>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Если вы уже знаете, какое оборудование вас интересует, удобнее всего
-            сразу отправить заявку на КП через mini app.
+            Если вы уже выбрали модель или категорию, удобнее всего сразу отправить
+            заявку на коммерческое предложение через mini app.
           </p>
         </div>
       </div>
