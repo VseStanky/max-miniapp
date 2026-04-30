@@ -419,18 +419,19 @@ function App() {
     try {
       setIsSending(true);
 
+      const body = new URLSearchParams();
+      body.append("name", formName.trim());
+      body.append("phone", formPhone.trim());
+      body.append("comment", formComment.trim());
+      body.append("product", currentProduct.name);
+      body.append("source", "MAX mini app");
+
       const response = await fetch("https://vsestanky.ru/api/quote.php", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         },
-        body: JSON.stringify({
-          name: formName.trim(),
-          phone: formPhone.trim(),
-          comment: formComment.trim(),
-          product: currentProduct.name,
-          source: "MAX mini app"
-        })
+        body: body.toString()
       });
 
       const text = await response.text();
