@@ -21,44 +21,44 @@ const categories: Category[] = [
     id: "laser",
     name: "Лазерные станки с ЧПУ",
     emoji: "🔥",
-    description: "Резка листового металла, труб и профиля с высокой точностью.",
+    description: "Резка листового металла, труб и профиля с высокой точностью."
   },
   {
     id: "press",
     name: "Листогибочные прессы",
     emoji: "🛠️",
-    description: "Гибка листового металла для серийного и индивидуального производства.",
+    description: "Гибка листового металла для серийного и индивидуального производства."
   },
   {
     id: "lathe",
     name: "Токарные станки с ЧПУ",
     emoji: "⚙️",
-    description: "Для обработки валов, втулок, фланцев и других деталей вращения.",
+    description: "Для обработки валов, втулок, фланцев и других деталей вращения."
   },
   {
     id: "milling",
     name: "Фрезерные станки с ЧПУ",
     emoji: "🧩",
-    description: "Фрезерная обработка деталей сложной геометрии и корпусных изделий.",
+    description: "Фрезерная обработка деталей сложной геометрии и корпусных изделий."
   },
   {
     id: "edm",
     name: "Электроэрозионные станки",
     emoji: "⚡",
-    description: "Проволочно-вырезная и электроэрозионная обработка металла.",
+    description: "Проволочно-вырезная и электроэрозионная обработка металла."
   },
   {
     id: "band",
     name: "Ленточнопильные станки",
     emoji: "🔩",
-    description: "Надёжные решения для резки металлического проката и заготовок.",
+    description: "Надёжные решения для резки металлического проката и заготовок."
   },
   {
     id: "welding",
     name: "Лазерная сварка и очистка",
     emoji: "✨",
-    description: "Компактные и мощные аппараты для сварки, очистки и подготовки поверхности.",
-  },
+    description: "Аппараты для сварки, очистки и подготовки поверхности."
+  }
 ];
 
 const products: Product[] = [
@@ -67,65 +67,65 @@ const products: Product[] = [
     categoryId: "laser",
     name: "LaserCut 3015 1500W",
     price: "от 1 950 000 ₽",
-    description: "Станок лазерной резки с рабочим полем 3000×1500 мм для стабильной ежедневной нагрузки.",
-    specs: ["Поле: 3000×1500 мм", "Источник: 1500W", "Материалы: черный металл, нержавейка, алюминий"],
+    description: "Станок лазерной резки с рабочим полем 3000×1500 мм.",
+    specs: ["Поле 3000×1500 мм", "Источник 1500W", "Для листового металла"]
   },
   {
     id: "laser-2",
     categoryId: "laser",
     name: "LaserCut 3015 3000W",
     price: "от 2 600 000 ₽",
-    description: "Более производительное решение для предприятий с повышенными объёмами раскроя.",
-    specs: ["Поле: 3000×1500 мм", "Источник: 3000W", "Высокая скорость резки"],
+    description: "Производительное решение для больших объёмов раскроя.",
+    specs: ["Источник 3000W", "Высокая скорость", "Для постоянной загрузки"]
   },
   {
     id: "press-1",
     categoryId: "press",
     name: "PressMaster 100T",
     price: "от 3 100 000 ₽",
-    description: "Листогибочный пресс для типовых задач гибки металла.",
-    specs: ["Усилие: 100 тонн", "ЧПУ управление", "Для цехов и производств"],
+    description: "Листогибочный пресс для стандартных производственных задач.",
+    specs: ["Усилие 100 тонн", "ЧПУ управление", "Для гибки листа"]
   },
   {
     id: "lathe-1",
     categoryId: "lathe",
     name: "TurnPro CK6140",
     price: "от 2 200 000 ₽",
-    description: "Универсальный токарный станок с ЧПУ для широкого спектра деталей.",
-    specs: ["Стабильная геометрия", "Подходит для серийной работы", "Надёжная база"],
+    description: "Универсальный токарный станок с ЧПУ.",
+    specs: ["Серийная работа", "Стабильная геометрия", "Надёжная база"]
   },
   {
     id: "milling-1",
     categoryId: "milling",
     name: "MillCenter VMC850",
     price: "от 3 400 000 ₽",
-    description: "Вертикальный обрабатывающий центр для точной фрезерной обработки.",
-    specs: ["Класс VMC", "Для сложных деталей", "Для инструментальных задач"],
+    description: "Вертикальный обрабатывающий центр для точной обработки.",
+    specs: ["Класс VMC", "Для сложных деталей", "Для инструментальных задач"]
   },
   {
     id: "edm-1",
     categoryId: "edm",
     name: "EDM Start 400",
     price: "по запросу",
-    description: "Электроэрозионный станок для точной обработки трудных материалов.",
-    specs: ["Проволочно-вырезная обработка", "Точность", "Сложный контур"],
+    description: "Электроэрозионный станок для точной обработки.",
+    specs: ["Проволочно-вырезная обработка", "Высокая точность", "Сложный контур"]
   },
   {
     id: "band-1",
     categoryId: "band",
     name: "BandSaw 500",
     price: "от 890 000 ₽",
-    description: "Полуавтоматический ленточнопильный станок для металла.",
-    specs: ["Надёжный привод", "Для заготовительного участка", "Стабильный рез"],
+    description: "Полуавтоматический ленточнопильный станок.",
+    specs: ["Для заготовок", "Стабильный рез", "Надёжный привод"]
   },
   {
     id: "welding-1",
     categoryId: "welding",
     name: "LaserWeld 1500",
     price: "от 420 000 ₽",
-    description: "Ручной аппарат лазерной сварки для современного производства.",
-    specs: ["Мощность: 1500W", "Компактный формат", "Подходит для сварки и очистки"],
-  },
+    description: "Ручной аппарат лазерной сварки.",
+    specs: ["Мощность 1500W", "Компактный формат", "Сварка и очистка"]
+  }
 ];
 
 type Screen =
@@ -165,28 +165,17 @@ function App() {
               ВсеСтанки
             </div>
             <h1 className="mt-3 text-3xl font-bold leading-tight">
-              Каталог
-              <br />
-              промышленного оборудования
+              Каталог промышленного оборудования
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-200">
-              Подберите подходящий станок, посмотрите доступные модели и отправьте заявку на коммерческое предложение.
+              Подберите подходящий станок, посмотрите модели и отправьте заявку на коммерческое предложение.
             </p>
-
-            <div className="mt-5 flex items-center gap-2">
-              <div className="rounded-full bg-white/15 px-3 py-1 text-xs text-white/90">
-                ЧПУ оборудование
-              </div>
-              <div className="rounded-full bg-white/15 px-3 py-1 text-xs text-white/90">
-                Подбор под задачу
-              </div>
-            </div>
           </div>
 
-          <div className="mt-5 flex items-center justify-between">
-            <div>
-              <div className="text-lg font-semibold">Категории</div>
-              <div className="text-sm text-slate-500">Выберите направление оборудования</div>
+          <div className="mt-5">
+            <div className="text-lg font-semibold">Категории оборудования</div>
+            <div className="text-sm text-slate-500">
+              Выберите направление, чтобы перейти к моделям
             </div>
           </div>
 
@@ -199,7 +188,7 @@ function App() {
                   key={category.id}
                   type="button"
                   onClick={() => setScreen({ name: "category", categoryId: category.id })}
-                  className="w-full rounded-[24px] border border-white bg-white p-4 text-left shadow-sm transition hover:-translate-y-[1px] hover:shadow-md active:scale-[0.99]"
+                  className="w-full rounded-[24px] bg-white p-4 text-left shadow-sm transition hover:shadow-md active:scale-[0.99]"
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
@@ -233,13 +222,13 @@ function App() {
           <div className="mt-5 grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="rounded-[20px] border border-slate-200 bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
+              className="rounded-[20px] bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
             >
               О компании
             </button>
             <button
               type="button"
-              className="rounded-[20px] border border-slate-200 bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
+              className="rounded-[20px] bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
             >
               Контакты
             </button>
@@ -271,9 +260,6 @@ function App() {
             <p className="mt-3 text-sm leading-6 text-slate-600">
               {currentCategory?.description ?? ""}
             </p>
-            <div className="mt-4 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
-              Моделей: {currentProducts.length}
-            </div>
           </div>
 
           <div className="mt-4 space-y-3">
@@ -282,27 +268,17 @@ function App() {
                 key={product.id}
                 type="button"
                 onClick={() => setScreen({ name: "product", productId: product.id })}
-                className="block w-full rounded-[24px] border border-white bg-white p-4 text-left shadow-sm transition hover:-translate-y-[1px] hover:shadow-md active:scale-[0.99]"
+                className="block w-full rounded-[24px] bg-white p-4 text-left shadow-sm transition hover:shadow-md active:scale-[0.99]"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-base font-semibold text-slate-900">
-                      {product.name}
-                    </div>
-                    <div className="mt-2 text-sm font-medium text-slate-700">
-                      {product.price ?? "по запросу"}
-                    </div>
-                  </div>
-
-                  <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
-                    КП
-                  </div>
+                <div className="text-base font-semibold text-slate-900">
+                  {product.name}
                 </div>
-
+                <div className="mt-2 text-sm font-medium text-slate-700">
+                  {product.price ?? "по запросу"}
+                </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">
                   {product.description ?? ""}
                 </p>
-
                 <div className="mt-4 text-sm font-medium text-slate-900">
                   Подробнее →
                 </div>
@@ -339,6 +315,7 @@ function App() {
           <div className="mt-3 inline-flex rounded-full bg-slate-900 px-3 py-1 text-sm font-medium text-white">
             {currentProduct?.price ?? "по запросу"}
           </div>
+
           <p className="mt-4 text-sm leading-6 text-slate-600">
             {currentProduct?.description ?? ""}
           </p>
