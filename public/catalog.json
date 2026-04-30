@@ -1,0 +1,199 @@
+{
+  "categories": [
+    {
+      "id": "lazernye-stanki-s-chpu",
+      "emoji": "🔥",
+      "name": "Лазерные станки с ЧПУ",
+      "description": "Станки для лазерной резки металла.",
+      "itemsCount": 3
+    },
+    {
+      "id": "listogibochnye-pressa-s-chpu",
+      "emoji": "🛠️",
+      "name": "Листогибочные пресса с ЧПУ",
+      "description": "Оборудование для гибки листового металла.",
+      "itemsCount": 2
+    },
+    {
+      "id": "tokarnye-stanki-s-chpu",
+      "emoji": "⚙️",
+      "name": "Токарные станки с ЧПУ",
+      "description": "Токарные станки для серийного и единичного производства.",
+      "itemsCount": 2
+    },
+    {
+      "id": "frezernye-stanki-s-chpu",
+      "emoji": "🧩",
+      "name": "Фрезерные станки с ЧПУ",
+      "description": "Фрезерная обработка металла и сложных деталей.",
+      "itemsCount": 1
+    },
+    {
+      "id": "elektroerozionnye-stanki-s-chpu",
+      "emoji": "⚡",
+      "name": "Электроэрозионные станки с ЧПУ",
+      "description": "Электроэрозионная обработка деталей.",
+      "itemsCount": 1
+    },
+    {
+      "id": "lentochnopilnye-stanki",
+      "emoji": "🪚",
+      "name": "Ленточнопильные станки",
+      "description": "Ленточнопильные решения для металла.",
+      "itemsCount": 1
+    },
+    {
+      "id": "apparaty-lazernoj-svarki",
+      "emoji": "✨",
+      "name": "Аппараты лазерной сварки",
+      "description": "Оборудование для лазерной сварки и очистки.",
+      "itemsCount": 1
+    }
+  ],
+  "items": [
+    {
+      "id": "metaltec-2060hp-20000vt",
+      "categoryId": "lazernye-stanki-s-chpu",
+      "name": "MetalTec 2060HP (20000Вт)",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Промышленный комплекс лазерной резки",
+        "Обработка металла"
+      ],
+      "attrs": {
+        "Тип станка": "Закрытый тип"
+      },
+      "url": "https://vsestanky.ru/lazernye-stanki-s-chpu/metaltec-2060hp-20000vt-promyshlennyj-kompleks-lazernoj-rezk"
+    },
+    {
+      "id": "laser-f-6015-1500w",
+      "categoryId": "lazernye-stanki-s-chpu",
+      "name": "Лазерный станок F-6015 1500w",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Мощность 1500w",
+        "Для резки металла"
+      ],
+      "attrs": {
+        "Тип станка": "Открытый тип"
+      },
+      "url": "https://vsestanky.ru/lazernye-stanki-s-chpu/lazernyj-stanok-f-6015-1500w"
+    },
+    {
+      "id": "h3015-zashitnaya-kabina",
+      "categoryId": "lazernye-stanki-s-chpu",
+      "name": "Лазерный станок H3015 с защитной кабиной",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Защитная кабина",
+        "Лазерная резка металла"
+      ],
+      "attrs": {
+        "Тип станка": "Закрытый тип"
+      },
+      "url": "https://vsestanky.ru/lazernye-stanki-s-chpu/lazernyj-stanok-h3015-s-zashitnoj-kabinoj"
+    },
+    {
+      "id": "metaltec-hbc-esa630",
+      "categoryId": "listogibochnye-pressa-s-chpu",
+      "name": "MetalTec HBC ESA630",
+      "priceFrom": "от 2 332 064 ₽",
+      "specsList": [
+        "Гидравлический листогибочный пресс",
+        "ЧПУ ESA630"
+      ],
+      "attrs": {
+        "Управление": "ESA630"
+      },
+      "url": "https://vsestanky.ru/catalog/listogibochnye_gidravlicheskie_pressy/pressy_s_chpu_4_1/1805/?oid=1970"
+    },
+    {
+      "id": "pressy-tp10s",
+      "categoryId": "listogibochnye-pressa-s-chpu",
+      "name": "Прессы с ЧПУ контроллером TP10S",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Гидравлический листогибочный пресс",
+        "Контроллер TP10S"
+      ],
+      "attrs": {
+        "Управление": "TP10S"
+      },
+      "url": "https://www.vsestanky.ru/catalog/listogibochnye_gidravlicheskie_pressy/listogibochnye_gidravlicheskie_pressy_s_chpu_kontrollerom_tp10s/"
+    },
+    {
+      "id": "metaltec-nexus-35m",
+      "categoryId": "tokarnye-stanki-s-chpu",
+      "name": "MetalTec NEXUS 35M",
+      "priceFrom": "от 4 641 530 ₽",
+      "specsList": [
+        "Токарный станок ЧПУ",
+        "Наклонная станина"
+      ],
+      "attrs": {
+        "Система ЧПУ": "—"
+      },
+      "url": "https://www.vsestanky.ru/catalog/tokarnye_stanki_s_chpu/tokarno_frezernye_stanki_s_osyu_y_i_protivoshpindelem/1712/"
+    },
+    {
+      "id": "metaltec-nexus-55my",
+      "categoryId": "tokarnye-stanki-s-chpu",
+      "name": "MetalTec NEXUS 55MY",
+      "priceFrom": "от 7 895 564 ₽",
+      "specsList": [
+        "Токарный станок ЧПУ",
+        "Наклонная станина"
+      ],
+      "attrs": {
+        "Система ЧПУ": "—"
+      },
+      "url": "https://vsestanky.ru/catalog/tokarnye_stanki_s_chpu/tokarno_frezernye_stanki_s_osyu_y_i_protivoshpindelem/1716/?oid=2127"
+    },
+    {
+      "id": "frezernye-page",
+      "categoryId": "frezernye-stanki-s-chpu",
+      "name": "Фрезерные станки с ЧПУ",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Категория каталога",
+        "Несколько моделей на сайте"
+      ],
+      "attrs": {},
+      "url": "https://vsestanky.ru/frezernye-stanki-s-chpu/?page=4"
+    },
+    {
+      "id": "metaltec-dk77",
+      "categoryId": "elektroerozionnye-stanki-s-chpu",
+      "name": "MetalTec DK77",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Электроэрозионный многопроходной станок",
+        "Серия DK 77"
+      ],
+      "attrs": {},
+      "url": "https://www.vsestanky.ru/catalog/elektroerozionnye_stanki/seriya_dk_77_naklon_45/1688/"
+    },
+    {
+      "id": "metaltec-bs-300-za",
+      "categoryId": "lentochnopilnye-stanki",
+      "name": "MetalTec BS 300 ZA",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Автоматический колонный ленточнопильный станок"
+      ],
+      "attrs": {},
+      "url": "https://vsestanky.ru/lentochnopilnye-stanki/metaltec-bs-300-za-avtomaticheskij-kolonnyj-lentochnopilnyj"
+    },
+    {
+      "id": "metaltec-wl-3000",
+      "categoryId": "apparaty-lazernoj-svarki",
+      "name": "MetalTec WL 3000",
+      "priceFrom": "по запросу",
+      "specsList": [
+        "Оптоволоконная лазерная сварочная установка"
+      ],
+      "attrs": {},
+      "url": "https://vsestanky.ru/apparaty-lazernoj-svarki/optovolokonnaya-lazernaya-svarochnaya-ustanovka-metaltec-wl-2"
+    }
+  ]
+}
