@@ -1,101 +1,161 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import "./App.css";
+
 import HomePage from "./pages/HomePage";
-import CategoriesPage from "./pages/CategoriesPage";
-import CategoryFiltersPage from "./pages/CategoryFiltersPage";
-import ModelsPage from "./pages/ModelsPage";
-import ModelPage from "./pages/ModelPage";
-import LeadPage from "./pages/LeadPage";
-import FacetValuesPage from "./pages/FacetValuesPage";
+import CategoryPage from "./pages/CategoryPage";
+import ItemPage from "./pages/ItemPage";
+import FiltersPage from "./pages/FiltersPage";
 import AboutPage from "./pages/AboutPage";
 import ContactsPage from "./pages/ContactsPage";
-import { categories, items } from "./data/catalog";
-import { facetsByCategory } from "./data/facets";
-import { applyCategoryFilters } from "./utils/catalog";
-import type { ActiveFilters } from "./types/catalog";
+
+import { getCatalogData } from "./services/catalog";
+import type { ActiveFilters, Category, Item } from "./types/catalog";
 
 type Screen =
   | { name: "home" }
-  | { name: "about" }
-  | { name: "contacts" }
-  | { name: "categories" }
+  | { name: "category"; categoryId: string }
+  | { name: "item"; itemId: string }
   | { name: "filters"; categoryId: string }
-  | { name: "facet"; categoryId: string; facetKey: string }
-  | { name: "models"; categoryId: string }
-  | { name: "model"; categoryId: string; itemId: string }
-  | { name: "lead"; categoryId?: string; itemId?: string };
+  | { name: "about" }
+  | { name: "contacts" };
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
 
-  const selectedCategory =
-    "categoryId" in screen
-      ? categories.find((c) => c.id === screen.categoryId) ?? null
+  useEffect(() => {
+    async function loadCatalog() {
+      try {
+        const data = await getCatalogData();
+        setCategories(data.categories);
+        setItems(data.items);
+      } catch (error) {
+        console.error("Failed to load catalog", error);
+      } finally {
+        setIsLoadingCatalog(false);
+      }
+    }
+
+    void loadCatalog();
+  }, []);
+
+  const currentCategory =
+    screen.name === "category" || screen.name === "filters"
+      ? categories.find((category) => category.id === screen.categoryId) ?? null
       : null;
 
-  const selectedItem =
-    "itemId" in screen
-      ? items.find((i) => i.id === screen.itemId) ?? null
+  const currentItem =
+    screen.name === "item"
+      ? items.find((item) => item.id === screen.itemId) ?? null
       : null;
 
-  const selectedFacets = selectedCategory
-    ? facetsByCategory[selectedCategory.id] ?? []
-    : [];
+  const filteredItems = useMemo(() => {
+    if (screen.name !== "category") return [];
 
-  const currentCategoryFilters =
-    selectedCategory ? activeFilters[selectedCategory.id] ?? {} : {};
+    const categoryItems = items.filter(
+      (item) => item.categoryId === screen.categoryId
+    );
 
-  const rawCategoryItems = useMemo(() => {
-    if (!selectedCategory) return [];
-    return items.filter((item) => item.categoryId === selectedCategory.id);
-  }, [selectedCategory]);
-
-  const filteredCategoryItems = useMemo(() => {
-    if (!selectedCategory) return [];
-    return applyCategoryFilters(rawCategoryItems, currentCategoryFilters);
-  }, [selectedCategory, rawCategoryItems, currentCategoryFilters]);
-
-  const selectedFacet =
-    screen.name === "facet" && selectedCategory
-      ? selectedFacets.find((facet) => facet.key === screen.facetKey) ?? null
-      : null;
-
-  const setFacetValue = (categoryId: string, facetKey: string, value: string) => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      [categoryId]: {
-        ...(prev[categoryId] ?? {}),
-        [facetKey]: value,
-      },
-    }));
-  };
-
-  const clearFacetValue = (categoryId: string, facetKey: string) => {
-    setActiveFilters((prev) => {
-      const nextCategoryFilters = { ...(prev[categoryId] ?? {}) };
-      delete nextCategoryFilters[facetKey];
-
-      return {
-        ...prev,
-        [categoryId]: nextCategoryFilters,
-      };
+    return categoryItems.filter((item) => {
+      return Object.entries(activeFilters).every(([key, value]) => {
+        if (!value) return true;
+        return item.attrs?.[key] === value;
+      });
     });
-  };
+  }, [screen, items, activeFilters]);
 
-  const clearAllFilters = (categoryId: string) => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      [categoryId]: {},
-    }));
-  };
+  if (isLoadingCatalog) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-4">
+        <div className="mx-auto max-w-md py-10 text-sm text-slate-500">
+          Загрузка каталога…
+        </div>
+      </div>
+    );
+  }
 
   if (screen.name === "home") {
     return (
       <HomePage
-        onOpenCatalog={() => setScreen({ name: "categories" })}
-        onOpenLead={() => setScreen({ name: "lead" })}
+        categories={categories}
+        onOpenCategory={(categoryId) => setScreen({ name: "category", categoryId })}
         onOpenAbout={() => setScreen({ name: "about" })}
         onOpenContacts={() => setScreen({ name: "contacts" })}
+      />
+    );
+  }
+
+  if (screen.name === "category") {
+    if (!currentCategory) {
+      return (
+        <div className="min-h-screen bg-slate-50 p-4">
+          <div className="mx-auto max-w-md py-10 text-sm text-slate-500">
+            Категория не найдена.
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <CategoryPage
+        category={currentCategory}
+        items={filteredItems}
+        activeFilters={activeFilters}
+        onBack={() => setScreen({ name: "home" })}
+        onOpenItem={(itemId) => setScreen({ name: "item", itemId })}
+        onOpenFilters={() =>
+          setScreen({ name: "filters", categoryId: screen.categoryId })
+        }
+      />
+    );
+  }
+
+  if (screen.name === "filters") {
+    if (!currentCategory) {
+      return (
+        <div className="min-h-screen bg-slate-50 p-4">
+          <div className="mx-auto max-w-md py-10 text-sm text-slate-500">
+            Категория не найдена.
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <FiltersPage
+        category={currentCategory}
+        items={items.filter((item) => item.categoryId === screen.categoryId)}
+        activeFilters={activeFilters}
+        onBack={() => setScreen({ name: "category", categoryId: screen.categoryId })}
+        onApply={(filters) => {
+          setActiveFilters(filters);
+          setScreen({ name: "category", categoryId: screen.categoryId });
+        }}
+        onReset={() => setActiveFilters({})}
+      />
+    );
+  }
+
+  if (screen.name === "item") {
+    if (!currentItem) {
+      return (
+        <div className="min-h-screen bg-slate-50 p-4">
+          <div className="mx-auto max-w-md py-10 text-sm text-slate-500">
+            Модель не найдена.
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <ItemPage
+        item={currentItem}
+        onBack={() =>
+          setScreen({ name: "category", categoryId: currentItem.categoryId })
+        }
       />
     );
   }
@@ -106,113 +166,6 @@ export default function App() {
 
   if (screen.name === "contacts") {
     return <ContactsPage onBack={() => setScreen({ name: "home" })} />;
-  }
-
-  if (screen.name === "categories") {
-    return (
-      <CategoriesPage
-        categories={categories}
-        onBack={() => setScreen({ name: "home" })}
-        onOpenCategory={(categoryId) => setScreen({ name: "filters", categoryId })}
-      />
-    );
-  }
-
-  if (screen.name === "filters" && selectedCategory) {
-    return (
-      <CategoryFiltersPage
-        category={selectedCategory}
-        facets={selectedFacets}
-        activeFilters={currentCategoryFilters}
-        totalCount={rawCategoryItems.length}
-        filteredCount={filteredCategoryItems.length}
-        onBack={() => setScreen({ name: "categories" })}
-        onOpenFacet={(facetKey) =>
-          setScreen({ name: "facet", categoryId: selectedCategory.id, facetKey })
-        }
-        onOpenModels={() =>
-          setScreen({ name: "models", categoryId: selectedCategory.id })
-        }
-        onOpenLead={() =>
-          setScreen({ name: "lead", categoryId: selectedCategory.id })
-        }
-        onResetAll={() => clearAllFilters(selectedCategory.id)}
-      />
-    );
-  }
-
-  if (screen.name === "facet" && selectedCategory && selectedFacet) {
-    return (
-      <FacetValuesPage
-        facet={selectedFacet}
-        activeValue={currentCategoryFilters[selectedFacet.key]}
-        onBack={() => setScreen({ name: "filters", categoryId: selectedCategory.id })}
-        onSelectValue={(value) => {
-          setFacetValue(selectedCategory.id, selectedFacet.key, value);
-          setScreen({ name: "filters", categoryId: selectedCategory.id });
-        }}
-        onClearValue={() => {
-          clearFacetValue(selectedCategory.id, selectedFacet.key);
-          setScreen({ name: "filters", categoryId: selectedCategory.id });
-        }}
-      />
-    );
-  }
-
-  if (screen.name === "models" && selectedCategory) {
-    return (
-      <ModelsPage
-        category={selectedCategory}
-        items={filteredCategoryItems}
-        totalCount={rawCategoryItems.length}
-        onBack={() => setScreen({ name: "filters", categoryId: selectedCategory.id })}
-        onOpenItem={(itemId) =>
-          setScreen({ name: "model", categoryId: selectedCategory.id, itemId })
-        }
-        onOpenLead={() =>
-          setScreen({ name: "lead", categoryId: selectedCategory.id })
-        }
-      />
-    );
-  }
-
-  if (screen.name === "model" && selectedCategory && selectedItem) {
-    return (
-      <ModelPage
-        category={selectedCategory}
-        item={selectedItem}
-        onBack={() => setScreen({ name: "models", categoryId: selectedCategory.id })}
-        onHome={() => setScreen({ name: "home" })}
-        onOpenLead={() =>
-          setScreen({
-            name: "lead",
-            categoryId: selectedCategory.id,
-            itemId: selectedItem.id,
-          })
-        }
-      />
-    );
-  }
-
-  if (screen.name === "lead") {
-    return (
-      <LeadPage
-        category={selectedCategory}
-        item={selectedItem}
-        onBack={() =>
-          screen.itemId && screen.categoryId
-            ? setScreen({
-                name: "model",
-                categoryId: screen.categoryId,
-                itemId: screen.itemId,
-              })
-            : screen.categoryId
-            ? setScreen({ name: "filters", categoryId: screen.categoryId })
-            : setScreen({ name: "home" })
-        }
-        onDone={() => setScreen({ name: "home" })}
-      />
-    );
   }
 
   return null;
