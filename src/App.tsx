@@ -423,17 +423,8 @@ function App() {
         name: formName.trim(),
         phone: formPhone.trim(),
         comment: formComment.trim(),
-        message: formComment.trim(),
         product: currentProduct.name,
-        product_name: currentProduct.name,
-        source: "MAX mini app",
-        form: {
-          name: formName.trim(),
-          phone: formPhone.trim(),
-          comment: formComment.trim(),
-          product: currentProduct.name,
-          source: "MAX mini app"
-        }
+        source: "MAX mini app"
       };
 
       const response = await fetch("https://vsestanky.ru/api/quote.php", {
