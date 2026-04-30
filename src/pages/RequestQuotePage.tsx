@@ -22,9 +22,9 @@ const initialForm: QuoteFormData = {
 
 export default function RequestQuotePage({ item, onBack }: Props) {
   const [form, setForm] = useState<QuoteFormData>(initialForm);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<QuoteSubmitResult | null>(null);
+  const [submitError, setSubmitError] = useState<string>("");
 
   const canSubmit = useMemo(() => {
     return form.name.trim() !== "" && form.phone.trim() !== "";
@@ -35,6 +35,9 @@ export default function RequestQuotePage({ item, onBack }: Props) {
     value: QuoteFormData[K]
   ) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    if (submitError) {
+      setSubmitError("");
+    }
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -44,49 +47,54 @@ export default function RequestQuotePage({ item, onBack }: Props) {
 
     try {
       setIsSubmitting(true);
+      setSubmitError("");
+      setSubmitResult(null);
 
       const payload = buildQuotePayload(form, item);
       const result = await submitQuoteRequest(payload);
 
       if (!result.ok) {
-        throw new Error("Request failed");
+        throw new Error(result.message || "Не удалось отправить заявку");
       }
 
       setSubmitResult(result);
-      setIsSubmitted(true);
     } catch (error) {
-      console.error("Failed to submit quote request", error);
-      alert("Не удалось отправить заявку. Попробуйте ещё раз.");
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Не удалось отправить заявку. Попробуйте ещё раз.";
+
+      setSubmitError(message);
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  if (isSubmitted) {
+  if (submitResult?.ok) {
     return (
       <div className="min-h-screen bg-slate-50 p-4">
         <div className="mx-auto max-w-md space-y-4 py-4">
           <div className="rounded-2xl bg-white p-5 shadow-sm">
-            <div className="text-sm text-slate-500">Заявка отправлена</div>
+            <div className="text-sm text-emerald-600">Заявка отправлена</div>
             <h1 className="mt-1 text-2xl font-bold text-slate-900">
               Спасибо
             </h1>
 
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Заявка на коммерческое предложение сформирована.
+              Заявка на коммерческое предложение успешно отправлена.
             </p>
 
-            {submitResult?.mode === "backend" ? (
+            {submitResult.leadId ? (
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Данные были отправлены в backend для дальнейшей обработки и
-                передачи в amoCRM.
+                Номер лида в amoCRM: <span className="font-medium">{submitResult.leadId}</span>
               </p>
-            ) : (
+            ) : null}
+
+            {submitResult.message ? (
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Сейчас приложение работает в тестовом режиме: данные выведены в
-                console.log и ещё не отправляются в backend.
+                {submitResult.message}
               </p>
-            )}
+            ) : null}
 
             <button
               onClick={onBack}
@@ -117,6 +125,12 @@ export default function RequestQuotePage({ item, onBack }: Props) {
             Оставьте контакты, и менеджер подготовит коммерческое предложение.
           </p>
         </div>
+
+        {submitError ? (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+            {submitError}
+          </div>
+        ) : null}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
