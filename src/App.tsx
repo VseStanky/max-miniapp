@@ -419,19 +419,29 @@ function App() {
     try {
       setIsSending(true);
 
-      const body = new URLSearchParams();
-      body.append("name", formName.trim());
-      body.append("phone", formPhone.trim());
-      body.append("comment", formComment.trim());
-      body.append("product", currentProduct.name);
-      body.append("source", "MAX mini app");
+      const payload = {
+        name: formName.trim(),
+        phone: formPhone.trim(),
+        comment: formComment.trim(),
+        message: formComment.trim(),
+        product: currentProduct.name,
+        product_name: currentProduct.name,
+        source: "MAX mini app",
+        form: {
+          name: formName.trim(),
+          phone: formPhone.trim(),
+          comment: formComment.trim(),
+          product: currentProduct.name,
+          source: "MAX mini app"
+        }
+      };
 
       const response = await fetch("https://vsestanky.ru/api/quote.php", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          "Content-Type": "application/json"
         },
-        body: body.toString()
+        body: JSON.stringify(payload)
       });
 
       const text = await response.text();
