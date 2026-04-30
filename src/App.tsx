@@ -310,6 +310,18 @@ const styles: Record<string, CSSProperties> = {
     marginTop: 12,
     cursor: "pointer"
   },
+  submitDisabled: {
+    width: "100%",
+    border: "none",
+    borderRadius: 18,
+    background: "#94a3b8",
+    color: "#fff",
+    padding: "15px 16px",
+    fontSize: 14,
+    fontWeight: 700,
+    marginTop: 12,
+    cursor: "not-allowed"
+  },
   spec: {
     marginTop: 10,
     borderRadius: 16,
@@ -333,11 +345,35 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 600,
     color: "#1e293b",
     boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+  },
+  statusOk: {
+    marginTop: 12,
+    borderRadius: 16,
+    background: "#ecfdf5",
+    color: "#166534",
+    padding: "12px 14px",
+    fontSize: 14,
+    lineHeight: 1.5
+  },
+  statusError: {
+    marginTop: 12,
+    borderRadius: 16,
+    background: "#fef2f2",
+    color: "#b91c1c",
+    padding: "12px 14px",
+    fontSize: 14,
+    lineHeight: 1.5
   }
 };
 
 function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
+  const [formName, setFormName] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formComment, setFormComment] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const currentCategory =
     screen.name === "category"
@@ -358,6 +394,59 @@ function App() {
     screen.name === "product"
       ? products.find((p) => p.id === screen.productId) ?? null
       : null;
+
+  async function handleSubmit() {
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    if (!formName.trim()) {
+      setErrorMessage("Введите имя.");
+      return;
+    }
+
+    if (!formPhone.trim()) {
+      setErrorMessage("Введите телефон.");
+      return;
+    }
+
+    if (!currentProduct) {
+      setErrorMessage("Не выбран товар.");
+      return;
+    }
+
+    try {
+      setIsSending(true);
+
+      const response = await fetch("https://vsestanky.ru/api/quote.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: formName.trim(),
+          phone: formPhone.trim(),
+          comment: formComment.trim(),
+          product: currentProduct.name,
+          source: "MAX mini app"
+        })
+      });
+
+      const text = await response.text();
+
+      if (!response.ok) {
+        throw new Error(text || "Ошибка отправки.");
+      }
+
+      setSuccessMessage("Заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.");
+      setFormName("");
+      setFormPhone("");
+      setFormComment("");
+    } catch (error) {
+      setErrorMessage("Не удалось отправить заявку. Попробуйте ещё раз.");
+    } finally {
+      setIsSending(false);
+    }
+  }
 
   if (screen.name === "home") {
     return (
@@ -427,7 +516,11 @@ function App() {
               key={product.id}
               type="button"
               style={styles.card}
-              onClick={() => setScreen({ name: "product", productId: product.id })}
+              onClick={() => {
+                setSuccessMessage("");
+                setErrorMessage("");
+                setScreen({ name: "product", productId: product.id });
+              }}
             >
               <div style={styles.cardTitle}>{product.name}</div>
               <div style={{ ...styles.cardText, marginTop: 8, fontWeight: 600, color: "#334155" }}>
@@ -474,10 +567,53 @@ function App() {
             Оставьте контакты, и мы подберём оборудование под вашу задачу.
           </div>
 
-          <input type="text" placeholder="Ваше имя" style={styles.input} />
-          <input type="tel" placeholder="Телефон" style={styles.input} />
-          <textarea placeholder="Комментарий или задача" rows={4} style={styles.input} />
-          <button type="button" style={styles.submit}>Отправить заявку</button>
+          <input
+            type="text"
+            placeholder="Ваше имя"
+            style={styles.input}
+            value={formName}
+            onChange={(e) => setFormName(e.target.value)}
+          />
+          <input
+            type="tel"
+            placeholder="Телефон"
+            style={styles.input}
+            value={formPhone}
+            onChange={(e) => setFormPhone(e.target.value)}
+          />
+          <textarea
+            placeholder="Комментарий или задача"
+            rows={4}
+            style={styles.input}
+            value={formComment}
+            onChange={(e) => setFormComment(e.target.value)}
+          />
+
+          <input
+            type="text"
+            value={currentProduct?.name ?? ""}
+            readOnly
+            style={{ ...styles.input, color: "#475569", background: "#eef2f7" }}
+          />
+
+          <input
+            type="text"
+            value="MAX mini app"
+            readOnly
+            style={{ ...styles.input, color: "#475569", background: "#eef2f7" }}
+          />
+
+          <button
+            type="button"
+            style={isSending ? styles.submitDisabled : styles.submit}
+            onClick={handleSubmit}
+            disabled={isSending}
+          >
+            {isSending ? "Отправка..." : "Отправить заявку"}
+          </button>
+
+          {successMessage ? <div style={styles.statusOk}>{successMessage}</div> : null}
+          {errorMessage ? <div style={styles.statusError}>{errorMessage}</div> : null}
         </div>
       </div>
     </div>
