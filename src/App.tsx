@@ -362,7 +362,9 @@ const styles: Record<string, CSSProperties> = {
     color: "#b91c1c",
     padding: "12px 14px",
     fontSize: 14,
-    lineHeight: 1.5
+    lineHeight: 1.5,
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word"
   }
 };
 
@@ -433,16 +435,29 @@ function App() {
 
       const text = await response.text();
 
-      if (!response.ok) {
-        throw new Error(text || "Ошибка отправки.");
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
       }
 
-      setSuccessMessage("Заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.");
+      if (!response.ok) {
+        throw new Error(text || `HTTP ${response.status}`);
+      }
+
+      if (data && data.ok === false) {
+        throw new Error(data.message || "Сервер вернул ошибку.");
+      }
+
+      setSuccessMessage(
+        data?.message || "Заявка успешно отправлена. Мы свяжемся с вами в ближайшее время."
+      );
       setFormName("");
       setFormPhone("");
       setFormComment("");
-    } catch (error) {
-      setErrorMessage("Не удалось отправить заявку. Попробуйте ещё раз.");
+    } catch (error: any) {
+      setErrorMessage(error?.message || "Не удалось отправить заявку.");
     } finally {
       setIsSending(false);
     }
