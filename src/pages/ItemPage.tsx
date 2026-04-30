@@ -3,9 +3,10 @@ import type { Item } from "../types/catalog";
 type Props = {
   item: Item;
   onBack: () => void;
+  onRequestQuote: (itemId: string) => void;
 };
 
-export default function ItemPage({ item, onBack }: Props) {
+export default function ItemPage({ item, onBack, onRequestQuote }: Props) {
   return (
     <div className="min-h-screen bg-slate-50 p-4">
       <div className="mx-auto max-w-md space-y-4 py-4">
@@ -63,15 +64,12 @@ export default function ItemPage({ item, onBack }: Props) {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="text-base font-semibold text-slate-900">
-            Запросить КП
-          </div>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Если модель подходит, следующим шагом можно отправить заявку на
-            коммерческое предложение.
-          </p>
-        </div>
+        <button
+          onClick={() => onRequestQuote(item.id)}
+          className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white"
+        >
+          Запросить КП
+        </button>
       </div>
     </div>
   );
