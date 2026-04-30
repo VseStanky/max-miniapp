@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 
 type Category = {
   id: string;
@@ -133,6 +133,209 @@ type Screen =
   | { name: "category"; categoryId: string }
   | { name: "product"; productId: string };
 
+const styles: Record<string, CSSProperties> = {
+  page: {
+    minHeight: "100vh",
+    background: "#f3f5f7",
+    color: "#0f172a",
+    fontFamily: "Inter, Arial, sans-serif"
+  },
+  container: {
+    maxWidth: 460,
+    margin: "0 auto",
+    padding: "16px 16px 32px"
+  },
+  hero: {
+    background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+    color: "#fff",
+    borderRadius: 28,
+    padding: 20,
+    boxShadow: "0 10px 30px rgba(15,23,42,0.18)"
+  },
+  heroLabel: {
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: "0.18em",
+    color: "rgba(255,255,255,0.7)"
+  },
+  heroTitle: {
+    marginTop: 12,
+    fontSize: 30,
+    fontWeight: 700,
+    lineHeight: 1.15
+  },
+  heroText: {
+    marginTop: 12,
+    fontSize: 14,
+    lineHeight: 1.6,
+    color: "rgba(255,255,255,0.85)"
+  },
+  sectionTitle: {
+    marginTop: 22,
+    fontSize: 20,
+    fontWeight: 700
+  },
+  sectionText: {
+    marginTop: 6,
+    fontSize: 14,
+    color: "#64748b"
+  },
+  card: {
+    width: "100%",
+    border: "none",
+    background: "#fff",
+    borderRadius: 24,
+    padding: 16,
+    marginTop: 12,
+    textAlign: "left",
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
+    cursor: "pointer"
+  },
+  cardTop: {
+    display: "flex",
+    gap: 14,
+    alignItems: "flex-start"
+  },
+  iconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    background: "#f1f5f9",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 24,
+    flexShrink: 0
+  },
+  badge: {
+    background: "#0f172a",
+    color: "#fff",
+    borderRadius: 999,
+    padding: "4px 10px",
+    fontSize: 12,
+    fontWeight: 600,
+    flexShrink: 0
+  },
+  cardTitleRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    alignItems: "flex-start"
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 1.35,
+    margin: 0
+  },
+  cardText: {
+    marginTop: 10,
+    fontSize: 14,
+    lineHeight: 1.6,
+    color: "#475569"
+  },
+  cardLink: {
+    marginTop: 12,
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#0f172a"
+  },
+  backButton: {
+    border: "none",
+    background: "#fff",
+    borderRadius: 999,
+    padding: "10px 14px",
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#334155",
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
+    cursor: "pointer",
+    marginBottom: 16
+  },
+  whiteBlock: {
+    background: "#fff",
+    borderRadius: 28,
+    padding: 20,
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+  },
+  smallLabel: {
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: "0.16em",
+    color: "#94a3b8"
+  },
+  title: {
+    marginTop: 8,
+    fontSize: 28,
+    fontWeight: 700,
+    lineHeight: 1.2
+  },
+  pill: {
+    display: "inline-block",
+    marginTop: 14,
+    borderRadius: 999,
+    background: "#0f172a",
+    color: "#fff",
+    padding: "7px 12px",
+    fontSize: 14,
+    fontWeight: 600
+  },
+  formBlock: {
+    marginTop: 16,
+    background: "#fff",
+    borderRadius: 28,
+    padding: 20,
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+  },
+  input: {
+    width: "100%",
+    borderRadius: 18,
+    border: "1px solid #cbd5e1",
+    background: "#f8fafc",
+    padding: "14px 16px",
+    fontSize: 14,
+    outline: "none",
+    marginTop: 12,
+    boxSizing: "border-box"
+  },
+  submit: {
+    width: "100%",
+    border: "none",
+    borderRadius: 18,
+    background: "#0f172a",
+    color: "#fff",
+    padding: "15px 16px",
+    fontSize: 14,
+    fontWeight: 700,
+    marginTop: 12,
+    cursor: "pointer"
+  },
+  spec: {
+    marginTop: 10,
+    borderRadius: 16,
+    background: "#f8fafc",
+    padding: "12px 14px",
+    fontSize: 14,
+    color: "#334155"
+  },
+  twoCols: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 12,
+    marginTop: 16
+  },
+  smallButton: {
+    border: "none",
+    background: "#fff",
+    borderRadius: 20,
+    padding: "14px 12px",
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#1e293b",
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+  }
+};
+
 function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
 
@@ -158,80 +361,47 @@ function App() {
 
   if (screen.name === "home") {
     return (
-      <div className="min-h-screen bg-[#f3f5f7] text-slate-900">
-        <div className="mx-auto max-w-md px-4 pb-8 pt-4">
-          <div className="rounded-[28px] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-5 text-white shadow-lg">
-            <div className="text-xs uppercase tracking-[0.2em] text-slate-300">
-              ВсеСтанки
-            </div>
-            <h1 className="mt-3 text-3xl font-bold leading-tight">
-              Каталог промышленного оборудования
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-slate-200">
+      <div style={styles.page}>
+        <div style={styles.container}>
+          <div style={styles.hero}>
+            <div style={styles.heroLabel}>ВсеСтанки</div>
+            <div style={styles.heroTitle}>Каталог промышленного оборудования</div>
+            <div style={styles.heroText}>
               Подберите подходящий станок, посмотрите модели и отправьте заявку на коммерческое предложение.
-            </p>
-          </div>
-
-          <div className="mt-5">
-            <div className="text-lg font-semibold">Категории оборудования</div>
-            <div className="text-sm text-slate-500">
-              Выберите направление, чтобы перейти к моделям
             </div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {categories.map((category) => {
-              const count = products.filter((p) => p.categoryId === category.id).length;
+          <div style={styles.sectionTitle}>Категории оборудования</div>
+          <div style={styles.sectionText}>Выберите направление, чтобы перейти к моделям</div>
 
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setScreen({ name: "category", categoryId: category.id })}
-                  className="w-full rounded-[24px] bg-white p-4 text-left shadow-sm transition hover:shadow-md active:scale-[0.99]"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
-                      {category.emoji ?? "📦"}
+          {categories.map((category) => {
+            const count = products.filter((p) => p.categoryId === category.id).length;
+
+            return (
+              <button
+                key={category.id}
+                type="button"
+                style={styles.card}
+                onClick={() => setScreen({ name: "category", categoryId: category.id })}
+              >
+                <div style={styles.cardTop}>
+                  <div style={styles.iconBox}>{category.emoji ?? "📦"}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={styles.cardTitleRow}>
+                      <h2 style={styles.cardTitle}>{category.name}</h2>
+                      <div style={styles.badge}>{count}</div>
                     </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                        <h2 className="text-[15px] font-semibold leading-5 text-slate-900">
-                          {category.name}
-                        </h2>
-                        <div className="shrink-0 rounded-full bg-slate-900 px-2.5 py-1 text-xs font-medium text-white">
-                          {count}
-                        </div>
-                      </div>
-
-                      <p className="mt-2 text-sm leading-6 text-slate-600">
-                        {category.description}
-                      </p>
-
-                      <div className="mt-3 text-sm font-medium text-slate-900">
-                        Смотреть модели →
-                      </div>
-                    </div>
+                    <div style={styles.cardText}>{category.description}</div>
+                    <div style={styles.cardLink}>Смотреть модели →</div>
                   </div>
-                </button>
-              );
-            })}
-          </div>
+                </div>
+              </button>
+            );
+          })}
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              className="rounded-[20px] bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
-            >
-              О компании
-            </button>
-            <button
-              type="button"
-              className="rounded-[20px] bg-white px-4 py-4 text-sm font-medium text-slate-800 shadow-sm"
-            >
-              Контакты
-            </button>
+          <div style={styles.twoCols}>
+            <button type="button" style={styles.smallButton}>О компании</button>
+            <button type="button" style={styles.smallButton}>Контакты</button>
           </div>
         </div>
       </div>
@@ -240,131 +410,74 @@ function App() {
 
   if (screen.name === "category") {
     return (
-      <div className="min-h-screen bg-[#f3f5f7] text-slate-900">
-        <div className="mx-auto max-w-md px-4 pb-8 pt-4">
-          <button
-            type="button"
-            onClick={() => setScreen({ name: "home" })}
-            className="mb-4 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm"
-          >
+      <div style={styles.page}>
+        <div style={styles.container}>
+          <button type="button" style={styles.backButton} onClick={() => setScreen({ name: "home" })}>
             ← Назад
           </button>
 
-          <div className="rounded-[28px] bg-white p-5 shadow-sm">
-            <div className="text-xs uppercase tracking-[0.16em] text-slate-400">
-              Категория
-            </div>
-            <h1 className="mt-2 text-2xl font-bold leading-tight text-slate-900">
-              {currentCategory?.name ?? "Без названия"}
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              {currentCategory?.description ?? ""}
-            </p>
+          <div style={styles.whiteBlock}>
+            <div style={styles.smallLabel}>Категория</div>
+            <div style={styles.title}>{currentCategory?.name ?? "Без названия"}</div>
+            <div style={styles.cardText}>{currentCategory?.description ?? ""}</div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {currentProducts.map((product) => (
-              <button
-                key={product.id}
-                type="button"
-                onClick={() => setScreen({ name: "product", productId: product.id })}
-                className="block w-full rounded-[24px] bg-white p-4 text-left shadow-sm transition hover:shadow-md active:scale-[0.99]"
-              >
-                <div className="text-base font-semibold text-slate-900">
-                  {product.name}
-                </div>
-                <div className="mt-2 text-sm font-medium text-slate-700">
-                  {product.price ?? "по запросу"}
-                </div>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  {product.description ?? ""}
-                </p>
-                <div className="mt-4 text-sm font-medium text-slate-900">
-                  Подробнее →
-                </div>
-              </button>
-            ))}
-          </div>
+          {currentProducts.map((product) => (
+            <button
+              key={product.id}
+              type="button"
+              style={styles.card}
+              onClick={() => setScreen({ name: "product", productId: product.id })}
+            >
+              <div style={styles.cardTitle}>{product.name}</div>
+              <div style={{ ...styles.cardText, marginTop: 8, fontWeight: 600, color: "#334155" }}>
+                {product.price ?? "по запросу"}
+              </div>
+              <div style={styles.cardText}>{product.description ?? ""}</div>
+              <div style={styles.cardLink}>Подробнее →</div>
+            </button>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f5f7] text-slate-900">
-      <div className="mx-auto max-w-md px-4 pb-8 pt-4">
+    <div style={styles.page}>
+      <div style={styles.container}>
         <button
           type="button"
+          style={styles.backButton}
           onClick={() =>
             currentCategory
               ? setScreen({ name: "category", categoryId: currentCategory.id })
               : setScreen({ name: "home" })
           }
-          className="mb-4 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm"
         >
           ← Назад
         </button>
 
-        <div className="rounded-[28px] bg-white p-5 shadow-sm">
-          <div className="text-xs uppercase tracking-[0.16em] text-slate-400">
-            Оборудование
-          </div>
-          <h1 className="mt-2 text-2xl font-bold leading-tight text-slate-900">
-            {currentProduct?.name ?? "Товар"}
-          </h1>
-          <div className="mt-3 inline-flex rounded-full bg-slate-900 px-3 py-1 text-sm font-medium text-white">
-            {currentProduct?.price ?? "по запросу"}
-          </div>
+        <div style={styles.whiteBlock}>
+          <div style={styles.smallLabel}>Оборудование</div>
+          <div style={styles.title}>{currentProduct?.name ?? "Товар"}</div>
+          <div style={styles.pill}>{currentProduct?.price ?? "по запросу"}</div>
+          <div style={styles.cardText}>{currentProduct?.description ?? ""}</div>
 
-          <p className="mt-4 text-sm leading-6 text-slate-600">
-            {currentProduct?.description ?? ""}
-          </p>
-
-          {currentProduct?.specs?.length ? (
-            <div className="mt-5 space-y-2">
-              {currentProduct.specs.map((spec) => (
-                <div
-                  key={spec}
-                  className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700"
-                >
-                  {spec}
-                </div>
-              ))}
-            </div>
-          ) : null}
+          {currentProduct?.specs?.map((spec) => (
+            <div key={spec} style={styles.spec}>{spec}</div>
+          ))}
         </div>
 
-        <div className="mt-4 rounded-[28px] bg-white p-5 shadow-sm">
-          <div className="text-lg font-semibold text-slate-900">
-            Запросить коммерческое предложение
-          </div>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+        <div style={styles.formBlock}>
+          <div style={{ fontSize: 20, fontWeight: 700 }}>Запросить коммерческое предложение</div>
+          <div style={styles.cardText}>
             Оставьте контакты, и мы подберём оборудование под вашу задачу.
-          </p>
+          </div>
 
-          <form className="mt-5 space-y-3">
-            <input
-              type="text"
-              placeholder="Ваше имя"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none transition focus:border-slate-400 focus:bg-white"
-            />
-            <input
-              type="tel"
-              placeholder="Телефон"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none transition focus:border-slate-400 focus:bg-white"
-            />
-            <textarea
-              placeholder="Комментарий или задача"
-              rows={4}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none transition focus:border-slate-400 focus:bg-white"
-            />
-            <button
-              type="button"
-              className="w-full rounded-2xl bg-slate-900 px-4 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.99]"
-            >
-              Отправить заявку
-            </button>
-          </form>
+          <input type="text" placeholder="Ваше имя" style={styles.input} />
+          <input type="tel" placeholder="Телефон" style={styles.input} />
+          <textarea placeholder="Комментарий или задача" rows={4} style={styles.input} />
+          <button type="button" style={styles.submit}>Отправить заявку</button>
         </div>
       </div>
     </div>
