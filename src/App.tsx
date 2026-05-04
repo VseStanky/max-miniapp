@@ -427,7 +427,7 @@ function App() {
         source: "MAX mini app"
       };
 
-      const response = await fetch("https://vsestanky.ru/api/quote.php", {
+      const response = await fetch("/api/quote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
