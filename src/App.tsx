@@ -299,8 +299,8 @@ const categories: Category[] = [
         type: "select",
         options: [
           { label: "1 500", value: "1 500" },
-          { label: "12 000", value: "12 000" },
-          { label: "13 000", value: "13 000" },
+          { label: "2 000", value: "2 000" },
+          { label: "3 000", value: "3 000" },
         ],
       },
       {
