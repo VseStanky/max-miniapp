@@ -368,7 +368,7 @@ const styles: Record<string, CSSProperties> = {
   }
 };
 
-function App() {
+export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
   const [formName, setFormName] = useState("");
   const [formPhone, setFormPhone] = useState("");
@@ -381,11 +381,10 @@ function App() {
     screen.name === "category"
       ? categories.find((c) => c.id === screen.categoryId) ?? null
       : screen.name === "product"
-      ? categories.find(
-          (c) =>
-            c.id === products.find((p) => p.id === screen.productId)?.categoryId
-        ) ?? null
-      : null;
+        ? categories.find(
+            (c) => c.id === products.find((p) => p.id === screen.productId)?.categoryId
+          ) ?? null
+        : null;
 
   const currentProducts = useMemo(() => {
     if (screen.name !== "category") return [];
@@ -427,7 +426,7 @@ function App() {
         source: "MAX mini app"
       };
 
-      const response = await fetch("/api/quote", {
+      const response = await fetch("https://vsestanky.ru/api/quote.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -452,9 +451,7 @@ function App() {
         throw new Error(data.message || "Сервер вернул ошибку.");
       }
 
-      setSuccessMessage(
-        data?.message || "Заявка успешно отправлена. Мы свяжемся с вами в ближайшее время."
-      );
+      setSuccessMessage(data?.message || "Заявка успешно отправлена.");
       setFormName("");
       setFormPhone("");
       setFormComment("");
@@ -574,7 +571,9 @@ function App() {
           <div style={styles.cardText}>{currentProduct?.description ?? ""}</div>
 
           {currentProduct?.specs?.map((spec) => (
-            <div key={spec} style={styles.spec}>{spec}</div>
+            <div key={spec} style={styles.spec}>
+              {spec}
+            </div>
           ))}
         </div>
 
@@ -591,6 +590,7 @@ function App() {
             value={formName}
             onChange={(e) => setFormName(e.target.value)}
           />
+
           <input
             type="tel"
             placeholder="Телефон"
@@ -598,6 +598,7 @@ function App() {
             value={formPhone}
             onChange={(e) => setFormPhone(e.target.value)}
           />
+
           <textarea
             placeholder="Комментарий или задача"
             rows={4}
@@ -636,5 +637,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
