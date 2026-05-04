@@ -19,9 +19,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const AMO_SUBDOMAIN = process.env.AMO_SUBDOMAIN!;
   const AMO_TOKEN = process.env.AMO_TOKEN!;
 
+  const leadName = [
+    product ? `Заявка: ${product}` : "Заявка из MAX mini app",
+    comment ? ` | ${comment}` : "",
+    ` | ${source || "MAX mini app"}`
+  ].join("");
+
   const body = [
     {
-      name: product ? `Заявка: ${product}` : "Заявка из MAX mini app",
+      name: leadName,
       _embedded: {
         contacts: [
           {
@@ -34,17 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ]
           }
         ]
-      },
-      custom_fields_values: [
-        {
-          field_name: "Комментарий",
-          values: [
-            {
-              value: `${comment || "—"}\n\nТовар: ${product || "—"}\nИсточник: ${source || "MAX mini app"}`
-            }
-          ]
-        }
-      ]
+      }
     }
   ];
 
