@@ -32,7 +32,13 @@ type Screen =
   | { name: "contacts" }
   | { name: "category"; categoryId: string };
 
-type FilterState = Record<string, string | string[] | { min: string; max: string }>;
+type RangeValue = {
+  min: string;
+  max: string;
+};
+
+type FilterValue = string | string[] | RangeValue;
+type FilterState = Record<string, FilterValue>;
 
 const categories: Category[] = [
   {
@@ -48,7 +54,7 @@ const categories: Category[] = [
         min: 1424658,
         max: 19446522,
         step: 100000,
-        suffix: "₽"
+        suffix: "₽",
       },
       {
         id: "machineType",
@@ -58,8 +64,8 @@ const categories: Category[] = [
           { label: "Открытый тип", value: "Открытый тип" },
           { label: "Закрытый тип", value: "Закрытый тип" },
           { label: "Комбинированный", value: "Комбинированный" },
-          { label: "Труборез", value: "Труборез" }
-        ]
+          { label: "Труборез", value: "Труборез" },
+        ],
       },
       {
         id: "workArea",
@@ -70,8 +76,8 @@ const categories: Category[] = [
           { label: "1500×6000", value: "1500×6000" },
           { label: "2000×6000", value: "2000×6000" },
           { label: "2500×6000", value: "2500×6000" },
-          { label: "2500×12000", value: "2500×12000" }
-        ]
+          { label: "2500×12000", value: "2500×12000" },
+        ],
       },
       {
         id: "power",
@@ -82,16 +88,16 @@ const categories: Category[] = [
           { label: "2000 Вт", value: "2000 Вт" },
           { label: "3000 Вт", value: "3000 Вт" },
           { label: "6000 Вт", value: "6000 Вт" },
-          { label: "12000 Вт", value: "12000 Вт" }
-        ]
+          { label: "12000 Вт", value: "12000 Вт" },
+        ],
       },
       {
         id: "exchangeTable",
         label: "Сменный стол",
         type: "checkbox",
-        options: [{ label: "Да", value: "Да" }]
-      }
-    ]
+        options: [{ label: "Да", value: "Да" }],
+      },
+    ],
   },
   {
     id: "press",
@@ -106,8 +112,8 @@ const categories: Category[] = [
         options: [
           { label: "Гибка листа", value: "Гибка листа" },
           { label: "Серийное производство", value: "Серийное производство" },
-          { label: "Нестандартные изделия", value: "Нестандартные изделия" }
-        ]
+          { label: "Нестандартные изделия", value: "Нестандартные изделия" },
+        ],
       },
       {
         id: "effort",
@@ -116,10 +122,31 @@ const categories: Category[] = [
         options: [
           { label: "До 100 тонн", value: "До 100 тонн" },
           { label: "100–200 тонн", value: "100–200 тонн" },
-          { label: "Свыше 200 тонн", value: "Свыше 200 тонн" }
-        ]
-      }
-    ]
+          { label: "Свыше 200 тонн", value: "Свыше 200 тонн" },
+        ],
+      },
+      {
+        id: "bendLength",
+        label: "Длина гиба",
+        type: "select",
+        options: [
+          { label: "2500 мм", value: "2500 мм" },
+          { label: "3200 мм", value: "3200 мм" },
+          { label: "4000 мм", value: "4000 мм" },
+          { label: "6000 мм", value: "6000 мм" },
+        ],
+      },
+      {
+        id: "controlSystem",
+        label: "Система ЧПУ",
+        type: "select",
+        options: [
+          { label: "ESA", value: "ESA" },
+          { label: "DELEM", value: "DELEM" },
+          { label: "CYBELEC", value: "CYBELEC" },
+        ],
+      },
+    ],
   },
   {
     id: "lathe",
@@ -133,8 +160,8 @@ const categories: Category[] = [
         type: "select",
         options: [
           { label: "Горизонтальная станина", value: "Горизонтальная станина" },
-          { label: "Наклонная станина", value: "Наклонная станина" }
-        ]
+          { label: "Наклонная станина", value: "Наклонная станина" },
+        ],
       },
       {
         id: "productionType",
@@ -143,10 +170,20 @@ const categories: Category[] = [
         options: [
           { label: "Единичное", value: "Единичное" },
           { label: "Серийное", value: "Серийное" },
-          { label: "Массовое", value: "Массовое" }
-        ]
-      }
-    ]
+          { label: "Массовое", value: "Массовое" },
+        ],
+      },
+      {
+        id: "controlSystem",
+        label: "Система ЧПУ",
+        type: "select",
+        options: [
+          { label: "Fanuc", value: "Fanuc" },
+          { label: "Siemens", value: "Siemens" },
+          { label: "GSK", value: "GSK" },
+        ],
+      },
+    ],
   },
   {
     id: "milling",
@@ -161,8 +198,8 @@ const categories: Category[] = [
         options: [
           { label: "Вертикальный", value: "Вертикальный" },
           { label: "Горизонтальный", value: "Горизонтальный" },
-          { label: "Портальный", value: "Портальный" }
-        ]
+          { label: "Портальный", value: "Портальный" },
+        ],
       },
       {
         id: "material",
@@ -171,10 +208,20 @@ const categories: Category[] = [
         options: [
           { label: "Сталь", value: "Сталь" },
           { label: "Алюминий", value: "Алюминий" },
-          { label: "Цветные металлы", value: "Цветные металлы" }
-        ]
-      }
-    ]
+          { label: "Цветные металлы", value: "Цветные металлы" },
+        ],
+      },
+      {
+        id: "tableSize",
+        label: "Размер стола",
+        type: "select",
+        options: [
+          { label: "600×900", value: "600×900" },
+          { label: "900×1500", value: "900×1500" },
+          { label: "1200×1200", value: "1200×1200" },
+        ],
+      },
+    ],
   },
   {
     id: "edm",
@@ -188,10 +235,20 @@ const categories: Category[] = [
         type: "select",
         options: [
           { label: "Проволочно-вырезной", value: "Проволочно-вырезной" },
-          { label: "Прошивной", value: "Прошивной" }
-        ]
-      }
-    ]
+          { label: "Прошивной", value: "Прошивной" },
+        ],
+      },
+      {
+        id: "workTable",
+        label: "Размер стола",
+        type: "select",
+        options: [
+          { label: "400×300", value: "400×300" },
+          { label: "500×400", value: "500×400" },
+          { label: "630×400", value: "630×400" },
+        ],
+      },
+    ],
   },
   {
     id: "band",
@@ -206,17 +263,46 @@ const categories: Category[] = [
         options: [
           { label: "Ручная", value: "Ручная" },
           { label: "Полуавтомат", value: "Полуавтомат" },
-          { label: "Автомат", value: "Автомат" }
-        ]
-      }
-    ]
+          { label: "Автомат", value: "Автомат" },
+        ],
+      },
+      {
+        id: "cuttingCapacity",
+        label: "Размер заготовки",
+        type: "select",
+        options: [
+          { label: "До 260 мм", value: "До 260 мм" },
+          { label: "До 400 мм", value: "До 400 мм" },
+          { label: "Свыше 400 мм", value: "Свыше 400 мм" },
+        ],
+      },
+    ],
   },
   {
     id: "welding",
-    name: "Лазерная сварка и очистка",
+    name: "Аппараты лазерной сварки",
     emoji: "✨",
     description: "Подбор аппаратов лазерной сварки и очистки.",
     filters: [
+      {
+        id: "price",
+        label: "Цена",
+        type: "range",
+        min: 726575,
+        max: 1008219,
+        step: 10000,
+        suffix: "₽",
+      },
+      {
+        id: "laserPower",
+        label: "Мощность источника",
+        type: "select",
+        options: [
+          { label: "1 500", value: "1 500" },
+          { label: "12 000", value: "12 000" },
+          { label: "13 000", value: "13 000" },
+        ],
+      },
       {
         id: "mode",
         label: "Назначение",
@@ -224,21 +310,11 @@ const categories: Category[] = [
         options: [
           { label: "Сварка", value: "Сварка" },
           { label: "Очистка", value: "Очистка" },
-          { label: "Универсальный", value: "Универсальный" }
-        ]
+          { label: "Универсальный", value: "Универсальный" },
+        ],
       },
-      {
-        id: "laserPower",
-        label: "Мощность",
-        type: "select",
-        options: [
-          { label: "1000 Вт", value: "1000 Вт" },
-          { label: "1500 Вт", value: "1500 Вт" },
-          { label: "2000 Вт", value: "2000 Вт" }
-        ]
-      }
-    ]
-  }
+    ],
+  },
 ];
 
 const styles: Record<string, CSSProperties> = {
@@ -246,47 +322,47 @@ const styles: Record<string, CSSProperties> = {
     minHeight: "100vh",
     background: "#f3f5f7",
     color: "#0f172a",
-    fontFamily: "Inter, Arial, sans-serif"
+    fontFamily: "Inter, Arial, sans-serif",
   },
   container: {
     maxWidth: 460,
     margin: "0 auto",
-    padding: "16px 16px 32px"
+    padding: "16px 16px 32px",
   },
   hero: {
     background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
     color: "#fff",
     borderRadius: 28,
     padding: 20,
-    boxShadow: "0 10px 30px rgba(15,23,42,0.18)"
+    boxShadow: "0 10px 30px rgba(15,23,42,0.18)",
   },
   heroLabel: {
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: "0.18em",
-    color: "rgba(255,255,255,0.7)"
+    color: "rgba(255,255,255,0.7)",
   },
   heroTitle: {
     marginTop: 12,
     fontSize: 30,
     fontWeight: 700,
-    lineHeight: 1.15
+    lineHeight: 1.15,
   },
   heroText: {
     marginTop: 12,
     fontSize: 14,
     lineHeight: 1.6,
-    color: "rgba(255,255,255,0.85)"
+    color: "rgba(255,255,255,0.85)",
   },
   sectionTitle: {
     marginTop: 22,
     fontSize: 20,
-    fontWeight: 700
+    fontWeight: 700,
   },
   sectionText: {
     marginTop: 6,
     fontSize: 14,
-    color: "#64748b"
+    color: "#64748b",
   },
   card: {
     width: "100%",
@@ -297,12 +373,12 @@ const styles: Record<string, CSSProperties> = {
     marginTop: 12,
     textAlign: "left",
     boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   cardTop: {
     display: "flex",
     gap: 14,
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   iconBox: {
     width: 48,
@@ -313,31 +389,31 @@ const styles: Record<string, CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: 24,
-    flexShrink: 0
+    flexShrink: 0,
   },
   cardTitleRow: {
     display: "flex",
     justifyContent: "space-between",
     gap: 12,
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: 700,
     lineHeight: 1.35,
-    margin: 0
+    margin: 0,
   },
   cardText: {
     marginTop: 10,
     fontSize: 14,
     lineHeight: 1.6,
-    color: "#475569"
+    color: "#475569",
   },
   cardLink: {
     marginTop: 12,
     fontSize: 14,
     fontWeight: 600,
-    color: "#0f172a"
+    color: "#0f172a",
   },
   backButton: {
     border: "none",
@@ -349,32 +425,32 @@ const styles: Record<string, CSSProperties> = {
     color: "#334155",
     boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
     cursor: "pointer",
-    marginBottom: 16
+    marginBottom: 16,
   },
   whiteBlock: {
     background: "#fff",
     borderRadius: 28,
     padding: 20,
-    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
   },
   smallLabel: {
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: "0.16em",
-    color: "#94a3b8"
+    color: "#94a3b8",
   },
   title: {
     marginTop: 8,
     fontSize: 28,
     fontWeight: 700,
-    lineHeight: 1.2
+    lineHeight: 1.2,
   },
   formBlock: {
     marginTop: 16,
     background: "#fff",
     borderRadius: 28,
     padding: 20,
-    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
   },
   input: {
     width: "100%",
@@ -385,7 +461,7 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 14,
     outline: "none",
     marginTop: 12,
-    boxSizing: "border-box"
+    boxSizing: "border-box",
   },
   select: {
     width: "100%",
@@ -397,7 +473,7 @@ const styles: Record<string, CSSProperties> = {
     outline: "none",
     marginTop: 12,
     boxSizing: "border-box",
-    appearance: "none"
+    appearance: "none",
   },
   submit: {
     width: "100%",
@@ -409,7 +485,7 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 14,
     fontWeight: 700,
     marginTop: 12,
-    cursor: "pointer"
+    cursor: "pointer",
   },
   submitDisabled: {
     width: "100%",
@@ -421,7 +497,7 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 14,
     fontWeight: 700,
     marginTop: 12,
-    cursor: "not-allowed"
+    cursor: "not-allowed",
   },
   spec: {
     marginTop: 10,
@@ -429,13 +505,13 @@ const styles: Record<string, CSSProperties> = {
     background: "#f8fafc",
     padding: "12px 14px",
     fontSize: 14,
-    color: "#334155"
+    color: "#334155",
   },
   twoCols: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: 12,
-    marginTop: 16
+    marginTop: 16,
   },
   smallButton: {
     border: "none",
@@ -446,7 +522,7 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 600,
     color: "#1e293b",
     boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   statusOk: {
     marginTop: 12,
@@ -455,7 +531,7 @@ const styles: Record<string, CSSProperties> = {
     color: "#166534",
     padding: "12px 14px",
     fontSize: 14,
-    lineHeight: 1.5
+    lineHeight: 1.5,
   },
   statusError: {
     marginTop: 12,
@@ -466,12 +542,12 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 14,
     lineHeight: 1.5,
     whiteSpace: "pre-wrap",
-    wordBreak: "break-word"
+    wordBreak: "break-word",
   },
   filterTitle: {
     marginTop: 18,
     fontSize: 15,
-    fontWeight: 700
+    fontWeight: 700,
   },
   checkboxRow: {
     display: "flex",
@@ -479,13 +555,13 @@ const styles: Record<string, CSSProperties> = {
     gap: 10,
     marginTop: 12,
     fontSize: 14,
-    color: "#334155"
+    color: "#334155",
   },
   rangeGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: 12,
-    marginTop: 12
+    marginTop: 12,
   },
   hintBox: {
     marginTop: 16,
@@ -494,8 +570,8 @@ const styles: Record<string, CSSProperties> = {
     color: "#1e3a8a",
     padding: "14px 16px",
     fontSize: 14,
-    lineHeight: 1.6
-  }
+    lineHeight: 1.6,
+  },
 };
 
 function createInitialFilters(filters: FilterConfig[]): FilterState {
@@ -505,7 +581,7 @@ function createInitialFilters(filters: FilterConfig[]): FilterState {
     if (filter.type === "range") {
       state[filter.id] = {
         min: filter.min ? String(filter.min) : "",
-        max: filter.max ? String(filter.max) : ""
+        max: filter.max ? String(filter.max) : "",
       };
     } else if (filter.type === "checkbox") {
       state[filter.id] = [];
@@ -531,11 +607,19 @@ function buildFiltersText(category: Category | null, filters: FilterState) {
   category.filters.forEach((filter) => {
     const value = filters[filter.id];
 
-    if (filter.type === "range" && value && typeof value === "object" && "min" in value) {
+    if (
+      filter.type === "range" &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      "min" in value
+    ) {
       if (value.min || value.max) {
         const left = value.min ? formatNumber(value.min) : "не указано";
         const right = value.max ? formatNumber(value.max) : "не указано";
-        lines.push(`${filter.label}: от ${left} до ${right} ${filter.suffix ?? ""}`.trim());
+        lines.push(
+          `${filter.label}: от ${left} до ${right} ${filter.suffix ?? ""}`.trim()
+        );
       }
       return;
     }
@@ -555,6 +639,7 @@ function buildFiltersText(category: Category | null, filters: FilterState) {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "home" });
+
   const [filterValues, setFilterValues] = useState<Record<string, FilterState>>(() => {
     const initial: Record<string, FilterState> = {};
     categories.forEach((category) => {
@@ -575,8 +660,7 @@ export default function App() {
       ? categories.find((c) => c.id === screen.categoryId) ?? null
       : null;
 
-  const currentFilters =
-    currentCategory ? filterValues[currentCategory.id] : null;
+  const currentFilters = currentCategory ? filterValues[currentCategory.id] : null;
 
   const selectionText = useMemo(() => {
     return buildFiltersText(currentCategory, currentFilters ?? {});
@@ -593,12 +677,17 @@ export default function App() {
       ...prev,
       [categoryId]: {
         ...prev[categoryId],
-        [filterId]: value
-      }
+        [filterId]: value,
+      },
     }));
   }
 
-  function updateCheckbox(categoryId: string, filterId: string, optionValue: string, checked: boolean) {
+  function updateCheckbox(
+    categoryId: string,
+    filterId: string,
+    optionValue: string,
+    checked: boolean
+  ) {
     resetMessages();
     setFilterValues((prev) => {
       const current = prev[categoryId][filterId];
@@ -611,18 +700,26 @@ export default function App() {
         ...prev,
         [categoryId]: {
           ...prev[categoryId],
-          [filterId]: nextArray
-        }
+          [filterId]: nextArray,
+        },
       };
     });
   }
 
-  function updateRange(categoryId: string, filterId: string, side: "min" | "max", value: string) {
+  function updateRange(
+    categoryId: string,
+    filterId: string,
+    side: "min" | "max",
+    value: string
+  ) {
     resetMessages();
     setFilterValues((prev) => {
       const current = prev[categoryId][filterId];
       const rangeValue =
-        current && typeof current === "object" && !Array.isArray(current) && "min" in current
+        current &&
+        typeof current === "object" &&
+        !Array.isArray(current) &&
+        "min" in current
           ? current
           : { min: "", max: "" };
 
@@ -632,9 +729,9 @@ export default function App() {
           ...prev[categoryId],
           [filterId]: {
             ...rangeValue,
-            [side]: value
-          }
-        }
+            [side]: value,
+          },
+        },
       };
     });
   }
@@ -660,7 +757,10 @@ export default function App() {
     try {
       setIsSending(true);
 
-      const filtersText = buildFiltersText(currentCategory, filterValues[currentCategory.id]);
+      const filtersText = buildFiltersText(
+        currentCategory,
+        filterValues[currentCategory.id]
+      );
 
       const payload = {
         name: formName.trim(),
@@ -668,15 +768,15 @@ export default function App() {
         comment: [filtersText, formComment.trim()].filter(Boolean).join("\n\n"),
         product: `Подбор оборудования: ${currentCategory.name}`,
         category: currentCategory.name,
-        source: "MAX mini app"
+        source: "MAX mini app",
       };
 
       const response = await fetch("https://vsestanky.ru/api/quote.php", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       const text = await response.text();
@@ -715,12 +815,15 @@ export default function App() {
             <div style={styles.heroLabel}>ВсеСтанки</div>
             <div style={styles.heroTitle}>Подбор оборудования по параметрам</div>
             <div style={styles.heroText}>
-              Выберите категорию, задайте фильтры и отправьте запрос на коммерческое предложение.
+              Выберите категорию, задайте фильтры и отправьте запрос на коммерческое
+              предложение.
             </div>
           </div>
 
           <div style={styles.sectionTitle}>Категории оборудования</div>
-          <div style={styles.sectionText}>Откройте нужную категорию и задайте параметры подбора</div>
+          <div style={styles.sectionText}>
+            Откройте нужную категорию и задайте параметры подбора
+          </div>
 
           {categories.map((category) => (
             <button
@@ -753,7 +856,6 @@ export default function App() {
             >
               О компании
             </button>
-
             <button
               type="button"
               style={styles.smallButton}
@@ -783,13 +885,14 @@ export default function App() {
             <div style={styles.smallLabel}>О компании</div>
             <div style={styles.title}>ООО «ВсеСтанки»</div>
             <div style={styles.cardText}>
-              Мы поставляем металлообрабатывающее оборудование с ЧПУ, подбираем станки
-              под конкретные производственные задачи, выполняем настройку и сопровождение.
+              Мы поставляем металлообрабатывающее оборудование с ЧПУ, подбираем
+              станки под конкретные производственные задачи, выполняем настройку и
+              сопровождение.
             </div>
             <div style={styles.cardText}>
               Компания работает на рынке промышленного оборудования с 2022 года,
-              является официальным дилером оборудования на территории РФ и поставляет
-              решения по всей России.
+              является официальным дилером оборудования на территории РФ и
+              поставляет решения по всей России.
             </div>
           </div>
         </div>
@@ -812,7 +915,6 @@ export default function App() {
           <div style={styles.whiteBlock}>
             <div style={styles.smallLabel}>Контакты</div>
             <div style={styles.title}>Связаться с нами</div>
-
             <div style={styles.spec}>Телефон: +7 (903) 002-83-53</div>
             <div style={styles.spec}>Email: info@vsestanky.ru</div>
             <div style={styles.spec}>Время работы: ежедневно с 9:00 до 18:00</div>
@@ -841,9 +943,7 @@ export default function App() {
         <div style={styles.whiteBlock}>
           <div style={styles.smallLabel}>Подбор оборудования</div>
           <div style={styles.title}>{currentCategory?.name ?? "Категория"}</div>
-          <div style={styles.cardText}>
-            {currentCategory?.description ?? ""}
-          </div>
+          <div style={styles.cardText}>{currentCategory?.description ?? ""}</div>
 
           {currentCategory?.filters.map((filter) => {
             const value = currentFilters?.[filter.id];
@@ -900,7 +1000,10 @@ export default function App() {
             }
 
             const range =
-              value && typeof value === "object" && !Array.isArray(value) && "min" in value
+              value &&
+              typeof value === "object" &&
+              !Array.isArray(value) &&
+              "min" in value
                 ? value
                 : { min: "", max: "" };
 
@@ -934,21 +1037,30 @@ export default function App() {
           })}
 
           <div style={styles.hintBox}>
-            Мы используем выбранные параметры для подбора подходящего оборудования и подготовки КП.
+            Мы используем выбранные параметры для подбора подходящего оборудования
+            и подготовки КП.
           </div>
         </div>
 
         <div style={styles.formBlock}>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>Запросить коммерческое предложение</div>
+          <div style={{ fontSize: 20, fontWeight: 700 }}>
+            Запросить коммерческое предложение
+          </div>
           <div style={styles.cardText}>
-            Ниже будет отправлен запрос с выбранной категорией и параметрами подбора.
+            Ниже будет отправлен запрос с выбранной категорией и параметрами
+            подбора.
           </div>
 
           <textarea
             rows={8}
             readOnly
             value={selectionText}
-            style={{ ...styles.input, color: "#475569", background: "#eef2f7" }}
+            style={{
+              ...styles.input,
+              color: "#475569",
+              background: "#eef2f7",
+              resize: "none",
+            }}
           />
 
           <input
@@ -968,9 +1080,9 @@ export default function App() {
           />
 
           <textarea
-            placeholder="Дополнительная информация"
+            placeholder="Комментарий к заявке"
             rows={4}
-            style={styles.input}
+            style={{ ...styles.input, resize: "vertical" }}
             value={formComment}
             onChange={(e) => setFormComment(e.target.value)}
           />
