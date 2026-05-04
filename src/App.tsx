@@ -16,6 +16,13 @@ type Product = {
   specs?: string[];
 };
 
+type Screen =
+  | { name: "home" }
+  | { name: "about" }
+  | { name: "contacts" }
+  | { name: "category"; categoryId: string }
+  | { name: "product"; productId: string };
+
 const categories: Category[] = [
   {
     id: "laser",
@@ -127,11 +134,6 @@ const products: Product[] = [
     specs: ["Мощность 1500W", "Компактный формат", "Сварка и очистка"]
   }
 ];
-
-type Screen =
-  | { name: "home" }
-  | { name: "category"; categoryId: string }
-  | { name: "product"; productId: string };
 
 const styles: Record<string, CSSProperties> = {
   page: {
@@ -344,7 +346,8 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 14,
     fontWeight: 600,
     color: "#1e293b",
-    boxShadow: "0 4px 18px rgba(15,23,42,0.08)"
+    boxShadow: "0 4px 18px rgba(15,23,42,0.08)",
+    cursor: "pointer"
   },
   statusOk: {
     marginTop: 12,
@@ -503,8 +506,80 @@ export default function App() {
           })}
 
           <div style={styles.twoCols}>
-            <button type="button" style={styles.smallButton}>О компании</button>
-            <button type="button" style={styles.smallButton}>Контакты</button>
+            <button
+              type="button"
+              style={styles.smallButton}
+              onClick={() => setScreen({ name: "about" })}
+            >
+              О компании
+            </button>
+
+            <button
+              type="button"
+              style={styles.smallButton}
+              onClick={() => setScreen({ name: "contacts" })}
+            >
+              Контакты
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen.name === "about") {
+    return (
+      <div style={styles.page}>
+        <div style={styles.container}>
+          <button
+            type="button"
+            style={styles.backButton}
+            onClick={() => setScreen({ name: "home" })}
+          >
+            ← Назад
+          </button>
+
+          <div style={styles.whiteBlock}>
+            <div style={styles.smallLabel}>О компании</div>
+            <div style={styles.title}>ВсеСтанки</div>
+            <div style={styles.cardText}>
+              Мы поставляем промышленное оборудование и помогаем подобрать станки
+              под задачи производства: лазерную резку, гибку, токарную и
+              фрезерную обработку, электроэрозию, ленточнопильные решения и
+              лазерную сварку.
+            </div>
+            <div style={styles.cardText}>
+              Наша цель — быстро подобрать подходящее оборудование, подготовить
+              коммерческое предложение и сопроводить клиента на всех этапах
+              сделки.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen.name === "contacts") {
+    return (
+      <div style={styles.page}>
+        <div style={styles.container}>
+          <button
+            type="button"
+            style={styles.backButton}
+            onClick={() => setScreen({ name: "home" })}
+          >
+            ← Назад
+          </button>
+
+          <div style={styles.whiteBlock}>
+            <div style={styles.smallLabel}>Контакты</div>
+            <div style={styles.title}>Связаться с нами</div>
+
+            <div style={styles.spec}>Телефон: +7 (903) 002-83-53</div>
+            <div style={styles.spec}>Email: info@vsestanky.ru</div>
+            <div style={styles.spec}>Сайт: vsestanky.ru</div>
+            <div style={styles.spec}>Telegram: @VseStankyy</div>
+            <div style={styles.spec}>Время работы: ежедневно с 9:00 до 18:00</div>
           </div>
         </div>
       </div>
